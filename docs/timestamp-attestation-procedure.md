@@ -94,8 +94,8 @@ back to the architectural change that authorised it.
 
 ```jsonc
 "run_block": <uint>,                       // 1-based block index
-"block_label": "<snake_case_label>",       // e.g. "init_random_forest"
-"architectural_change_ref": "<acr-id>"     // e.g. "acr-2025-014"
+"block_label": "<snake_case_label>",       // snake_case label fixed in the ACR
+"architectural_change_ref": "<acr-id>"     // identifier of the authorising ACR
 ```
 
 Field semantics:
