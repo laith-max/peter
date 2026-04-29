@@ -14,6 +14,10 @@ in NSW, running on NVIDIA Jetson Orin Nano Super edge hardware.
 - [`docs/data-acquisition-protocol.md`](docs/data-acquisition-protocol.md)
   — what is captured, what is persisted, consent and notification,
   retention, access control, incident workflow.
+- [`docs/timestamp-attestation-procedure.md`](docs/timestamp-attestation-procedure.md)
+  — how each Monte Carlo run's start/end is signed on-device, chained,
+  and uplinked. Forward-looking procedure; no live attestation records
+  are stored in this repo.
 - [`jetson-logging/`](jetson-logging/) — device-side logging, privacy
   filter (the chokepoint), tegrastats collector, retention sweeper, and
   self-tests that gate the inference pipeline at boot.
