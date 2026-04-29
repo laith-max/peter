@@ -86,6 +86,58 @@ added but existing fields must not change meaning.
 The signature covers the canonical-JSON encoding of the marker with the
 `attestation.signature` field set to the empty string.
 
+### 3.1 Step 3 Run-Block Context Fields
+
+For Step 3 Monte Carlo runs, three additional fields extend the marker
+so that downstream analysis can group runs by block and trace each block
+back to the architectural change that authorised it.
+
+```jsonc
+"run_block": <uint>,                       // 1-based block index
+"block_label": "<snake_case_label>",       // e.g. "init_random_forest"
+"architectural_change_ref": "<acr-id>"     // e.g. "acr-2025-014"
+```
+
+Field semantics:
+
+- **`run_block`** — 1-based integer index of the block under which this
+  run was scheduled. Block indices are assigned in the architectural
+  change record (ACR) at the time the block opens and are never
+  re-used. The historical Run Block table (Runs 1–150, 320–400,
+  600–750, etc.) is the *narrative* view; `run_block` is the
+  machine-readable handle.
+- **`block_label`** — short snake_case label fixed in the ACR. Once a
+  marker has been signed carrying a given label, the label MUST NOT be
+  edited; subsequent ACRs that change the substantive configuration
+  open a new block with a new label rather than mutating the old one.
+- **`architectural_change_ref`** — stable identifier of the ACR that
+  authorised the configuration this run executed under. ACRs live in
+  the project's change-control system, not in this repo; the reference
+  is what lets a third party correlate a marker with the documented
+  rationale for the run's configuration.
+
+Constraints (enforced at ingest, see §7):
+
+- All three fields MUST be present together or absent together. A
+  marker with two of three is rejected.
+- `run_block` and `block_label` MUST agree with the ACR identified by
+  `architectural_change_ref` as of the time the marker was signed.
+- A marker MUST NOT claim membership in a block whose ACR was issued
+  after the marker's `wall_utc`. There is no mechanism for a marker to
+  retroactively join a block that did not exist when it was signed.
+
+### 3.2 Scope of the Run-Block Fields
+
+These fields capture *which authorised configuration* a run was
+executed under and *which block it belongs to*. They do not:
+
+- Establish that the architectural change was substantively justified —
+  that is the ACR's review, not the marker's job.
+- Establish block boundaries on their own. The mapping from run-id
+  ranges to blocks is a property of the ACR sequence; any tabular
+  summary (e.g. "Runs 1–150 → block 1") is a derived view over the
+  marker stream and the ACR registry, not an authoritative input.
+
 ## 4. Attestation Key Material
 
 - Each device holds an **ed25519 attestation keypair** generated inside
@@ -160,6 +212,10 @@ rather than papered over.
   4. `seq` is exactly `last_accepted_seq + 1`.
   5. `wall_utc` is within a configured tolerance of ingest-receive time
      **after** accounting for `ntp.last_offset_seconds`.
+  6. Run-block fields (§3.1) are either all present or all absent. If
+     present, `architectural_change_ref` resolves to a known ACR whose
+     `issued_at <= marker.wall_utc`, and the ACR's recorded
+     `(run_block, block_label)` matches the marker.
 - Rejections are logged with a reason code and surfaced on the ingest
   dashboard. They are not silently dropped.
 
