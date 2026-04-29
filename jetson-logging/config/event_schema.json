@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/jetson-logging/event.schema.json",
+  "title": "Jetson event record",
+  "type": "object",
+  "required": [
+    "timestamp_wall",
+    "timestamp_monotonic",
+    "site_id",
+    "device_id",
+    "room_id",
+    "event_type",
+    "confidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "timestamp_wall": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC wall-clock time of the event."
+    },
+    "timestamp_monotonic": {
+      "type": "number",
+      "description": "Device monotonic clock, seconds since boot."
+    },
+    "site_id": {
+      "type": "string",
+      "enum": ["urban_large", "urban_small", "regional_large", "regional_small"]
+    },
+    "device_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "room_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "occupancy_change",
+        "transition",
+        "audio_activity",
+        "proximity",
+        "pause_invoked",
+        "pause_released"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "aggregate_bin": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional bin start time for aggregated records."
+    }
+  }
+}
