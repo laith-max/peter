@@ -1,0 +1,7 @@
+numpy>=1.24
+
+# Jetson-only — uncomment on the target platform.
+# smbus2>=0.4
+# python-can>=4.2
+# pyserial>=3.5
+# jetson-inference is installed via the JetPack image, not pip.
