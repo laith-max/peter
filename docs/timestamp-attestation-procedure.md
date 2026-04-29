@@ -221,8 +221,8 @@ rather than papered over.
 
 ## 8. Off-Device Verification
 
-A standalone verifier (to live at `tools/verify_attestation.py`, not yet
-written) takes a sequence of markers for one device and:
+A standalone verifier at [`tools/verify_attestation.py`](../tools/verify_attestation.py)
+takes a sequence of markers for one device and:
 
 1. Recomputes each `prev_marker_hash` and checks the chain.
 2. Verifies each signature against the registered public key.
@@ -250,7 +250,6 @@ The verifier produces a report; it does not modify the marker store.
 
 ## 10. Open Items
 
-- `tools/verify_attestation.py` — to be implemented.
 - Device registry schema and storage location — to be specified in the
   operations handbook; cross-link from here once it lands.
 - Key-rotation runbook — likewise.
