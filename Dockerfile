@@ -1,7 +1,6 @@
-# Multi-stage build for Peter - AI monitoring system for NVIDIA Jetson
+# Image for Peter — Jetson device-side logging and privacy filter.
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
 # Install system dependencies
@@ -21,9 +20,11 @@ COPY . .
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Health check
+# Health check: the privacy self-test is the supervisor's gating check,
+# so we reuse it here. A non-zero exit means the filter is misconfigured
+# and the container should be considered unhealthy.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)" || exit 1
+    CMD python -m jetson_logging || exit 1
 
 # Default command
 CMD ["python", "-m", "jetson_logging"]
