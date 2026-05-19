@@ -7,3 +7,11 @@ __pycache__/
 .ruff_cache/
 *.swp
 .DS_Store
+
+# Go
+/bin/
+*.exe
+*.test
+*.out
+coverage.txt
+vendor/
