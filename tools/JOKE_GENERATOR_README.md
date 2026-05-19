@@ -1,4 +1,4 @@
-# Joke Generator
+#  Generator
 
 A simple random joke generator that fetches jokes from the [JokeAPI](https://jokeapi.dev/).
 
