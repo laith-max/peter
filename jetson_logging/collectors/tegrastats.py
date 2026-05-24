@@ -80,11 +80,19 @@ def parse_line(line: str) -> TegraSample:
 
 
 def stream(interval_ms: int = 1000, binary: str = TEGRASTATS_BIN) -> Iterator[TegraSample]:
-    """Spawn tegrastats and yield parsed samples until the process exits."""
+    """Spawn tegrastats and yield parsed samples until the process exits.
+
+    tegrastats normally runs until terminated, so the stream ending on its
+    own means the process died. If it died with a non-zero exit code we
+    raise `RuntimeError` (surfacing stderr) rather than yield an empty
+    stream — a missing or failing binary must be observable, not silent.
+    Early closure by the consumer (e.g. breaking out of iteration) is not
+    treated as an error.
+    """
     proc = subprocess.Popen(
         [binary, "--interval", str(interval_ms)],
         stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
         text=True,
         bufsize=1,
     )
@@ -101,3 +109,12 @@ def stream(interval_ms: int = 1000, binary: str = TEGRASTATS_BIN) -> Iterator[Te
             proc.wait(timeout=2)
         except subprocess.TimeoutExpired:
             proc.kill()
+            proc.wait()
+
+    # Reached only on natural completion (not when the consumer closes the
+    # generator early, in which case GeneratorExit propagates above).
+    err = proc.stderr.read().strip() if proc.stderr else ""
+    if proc.returncode not in (0, None):
+        raise RuntimeError(
+            f"tegrastats exited with code {proc.returncode}: {err or '<no stderr>'}"
+        )

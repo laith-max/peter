@@ -1,0 +1,29 @@
+{
+  "site_id": "REPLACE_ME",
+  "device_id": "REPLACE_ME",
+  "excluded_rooms": ["example-room-id"],
+  "event_confidence_floor": 0.6,
+  "aggregate_bin_seconds": 60,
+  "local_retention_days": 14,
+  "uplink_interval_seconds": 300,
+  "allowed_event_fields": [
+    "timestamp_wall",
+    "timestamp_monotonic",
+    "site_id",
+    "device_id",
+    "room_id",
+    "event_type",
+    "confidence",
+    "aggregate_bin"
+  ],
+  "forbidden_field_patterns": [
+    "frame",
+    "image",
+    "pcm",
+    "audio_raw",
+    "spectrogram",
+    "embedding",
+    "face",
+    "name"
+  ]
+}

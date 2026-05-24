@@ -21,7 +21,7 @@ Raw video and raw audio are explicitly **not** persisted. See the
 ## 2. Consent and Notification
 
 - **Parents / guardians** were notified in writing prior to deployment;
-  opt-out rooms are configured in `jetson-logging/config/site.yaml`
+  opt-out rooms are configured in `jetson-logging/config/site.json`
   (`excluded_rooms:`) and the device refuses to enable any vision/audio
   modality in those rooms.
 - **Educators** were briefed in person and provided written consent for

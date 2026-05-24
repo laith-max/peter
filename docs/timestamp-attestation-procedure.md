@@ -54,8 +54,8 @@ added but existing fields must not change meaning.
 {
   "marker_type": "run_start",          // or "run_end"
   "run_id": "<uuid v4>",               // shared by start/end of one run
-  "device_id": "<from site.yaml>",
-  "site_id": "<from site.yaml>",
+  "device_id": "<from site.json>",
+  "site_id": "<from site.json>",
   "seq": <uint64>,                     // strictly increasing on this device
   "prev_marker_hash": "<hex sha256>",  // hash of the previous marker on this device
   "monotonic_ns": <int>,
